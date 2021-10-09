@@ -1,0 +1,17 @@
+spring:
+  h2:
+    console:
+      enabled: true
+  datasource:
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: jdbc:log4jdbc:h2:mem:userdb;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+
+
+logging:
+  level:
+    org.springframework.web : debug
+    sql: error
+    jdbc: off
+    jdbc.sqlonly: debug 
