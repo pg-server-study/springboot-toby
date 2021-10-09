@@ -46,7 +46,7 @@ ex) 테이블생성 더미데이터 입력
 
 토비의 스프링에선 Connection 에 직접 jdbc://mysql 이런식으로 넣어주지면
 
-스프링부트의 DI를이용햐여 
+스프링을 이용하여
 
 ```java
 package com.example.springtobi.chapter1;
