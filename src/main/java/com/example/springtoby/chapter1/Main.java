@@ -1,4 +1,4 @@
-package com.example.springtobi.chapter1;
+package com.example.springtoby.chapter1;
 
 public class Main {
 

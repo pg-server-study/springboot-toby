@@ -1,4 +1,4 @@
-package com.example.springtobi.chapter1;
+package com.example.springtoby.chapter1;
 //스프링에 필요한 클래스를 정의합니다.
 
 public class User {

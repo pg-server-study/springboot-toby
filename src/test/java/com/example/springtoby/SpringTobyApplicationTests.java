@@ -1,10 +1,10 @@
-package com.example.springtobi;
+package com.example.springtoby;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SpringTobiApplicationTests {
+class SpringTobyApplicationTests {
 
     @Test
     void contextLoads() {

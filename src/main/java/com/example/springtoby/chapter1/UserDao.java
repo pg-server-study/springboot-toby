@@ -1,7 +1,6 @@
-package com.example.springtobi.chapter1;
+package com.example.springtoby.chapter1;
 
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

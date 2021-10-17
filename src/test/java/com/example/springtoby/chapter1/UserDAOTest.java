@@ -1,5 +1,7 @@
-package com.example.springtobi.chapter1;
+package com.example.springtoby.chapter1;
 
+import com.example.springtoby.chapter1.User;
+import com.example.springtoby.chapter1.UserDao;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
