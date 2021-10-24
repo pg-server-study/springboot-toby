@@ -1,11 +1,13 @@
 package com.example.springtoby.chapter1;
 
-import com.example.springtoby.chapter1.User;
-import com.example.springtoby.chapter1.UserDao;
+import com.example.springtoby.toby.User;
+import com.example.springtoby.toby.UserDao;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,7 +19,7 @@ public class UserDAOTest {
 
     @Test
     @DisplayName("데이터베이스에 유저 등록 및 조회 테스트")
-    void addUserTest() throws ClassNotFoundException {
+    void addUserTest() throws ClassNotFoundException, SQLException {
 
         // given
         User user = new User();
@@ -33,6 +35,8 @@ public class UserDAOTest {
         assertThat(user.getName()).isEqualTo(savedUser.getName());
 
     }
+
+
 
 
 
