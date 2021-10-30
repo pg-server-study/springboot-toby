@@ -1,8 +1,10 @@
 package com.example.springtoby.toby;
 
 import com.example.springtoby.toby.context.JdbcContext;
+import com.example.springtoby.toby.exception.DuplicateUserIdException;
 import com.example.springtoby.toby.statement.DeleteAllStatement;
 import com.example.springtoby.toby.statement.StatementStrategy;
+import com.mysql.cj.exceptions.MysqlErrorNumbers;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -33,8 +35,16 @@ public class UserDao {
         this.jdbcTemplate.update("delete from users");
     }
 
-    public void add(final User user) throws SQLException {
-        this.jdbcTemplate.update("insert into users(id, name, password) values(?,?,?)", user.getId(), user.getName(), user.getPassword());
+    public void add(final User user) throws DuplicateUserIdException {
+//        try {
+            this.jdbcTemplate.update("insert into users(id, name, password) values(?,?,?)", user.getId(), user.getName(), user.getPassword());
+//        } catch (SQLException e) {
+//            if(e.getErrorCode() == MysqlErrorNumbers.ER_DUP_ENTRY) {
+//                throw new DuplicateUserIdException(e);
+//            } else {
+//                throw new RuntimeException(e);
+//            }
+//        }
     }
 
     public int getCount() {
