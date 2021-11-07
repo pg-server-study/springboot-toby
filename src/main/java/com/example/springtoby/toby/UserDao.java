@@ -1,6 +1,7 @@
 package com.example.springtoby.toby;
 
 import com.example.springtoby.toby.context.JdbcContext;
+import com.example.springtoby.toby.enums.Level;
 import com.example.springtoby.toby.exception.DuplicateUserIdException;
 import com.example.springtoby.toby.statement.DeleteAllStatement;
 import com.example.springtoby.toby.statement.StatementStrategy;
@@ -36,22 +37,16 @@ public class UserDao {
     }
 
     public void add(final User user) throws DuplicateUserIdException {
-//        try {
-            this.jdbcTemplate.update("insert into users(id, name, password) values(?,?,?)", user.getId(), user.getName(), user.getPassword());
-//        } catch (SQLException e) {
-//            if(e.getErrorCode() == MysqlErrorNumbers.ER_DUP_ENTRY) {
-//                throw new DuplicateUserIdException(e);
-//            } else {
-//                throw new RuntimeException(e);
-//            }
-//        }
+        this.jdbcTemplate
+                .update("insert into users(id, name, password, level, login, recommend) values(?,?,?,?,?,?)"
+                        , user.getId(), user.getName(), user.getPassword(), user.getLevel().getValue(), user.getLogin(), user.getRecommend());
     }
 
     public int getCount() {
         return this.jdbcTemplate.queryForObject("select count(*) from users", Integer.class);
     }
 
-    public User get(String id)  {
+    public User get(String id) {
         return this.jdbcTemplate.queryForObject("select * from users where id = ?", new Object[]{id}, new RowMapper<User>() {
             @Override
             public User mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -59,6 +54,9 @@ public class UserDao {
                 user.setId(rs.getString("id"));
                 user.setName(rs.getString("name"));
                 user.setPassword(rs.getString("password"));
+                user.setLevel(Level.valueOf(rs.getInt("level")));
+                user.setLogin(rs.getInt("login"));
+                user.setRecommend(rs.getInt("recommend"));
                 return user;
             }
         });
@@ -72,9 +70,24 @@ public class UserDao {
                 user.setId(rs.getString("id"));
                 user.setName(rs.getString("name"));
                 user.setPassword(rs.getString("password"));
+                user.setLevel(Level.valueOf(rs.getInt("level")));
+                user.setLogin(rs.getInt("login"));
+                user.setRecommend(rs.getInt("recommend"));
                 return user;
             }
         });
+    }
+
+    public void update(User user) {
+        jdbcTemplate.update(
+                "update users " +
+                        "set name = ?, password = ?, level =?, login = ?, " +
+                        "recommend = ? where id = ?",
+                user.getName(), user.getPassword(),
+                user.getLevel().getValue(), user.getLogin(),
+                user.getRecommend(),
+                user.getId()
+        );
     }
 
 }
