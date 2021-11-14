@@ -3,10 +3,10 @@ package com.example.springtoby.domain;
 import com.example.springtoby.toby.User;
 import com.example.springtoby.toby.UserDao;
 import com.example.springtoby.toby.UserDaoImpl;
+import com.example.springtoby.toby.enums.Level;
 import com.example.springtoby.toby.exception.DuplicateUserIdException;
 import com.example.springtoby.toby.service.UserService;
 import com.example.springtoby.toby.service.UserServiceImpl;
-import com.example.springtoby.toby.enums.Level;
 import com.example.springtoby.toby.service.UserServiceTx;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,9 +20,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static com.example.springtoby.toby.service.UserServiceImpl.MIN_LOG_COUNT_FOR_SILVER;
 import static com.example.springtoby.toby.service.UserServiceImpl.MIN_RECOMMEND_FOR_GOLD;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
@@ -81,6 +81,7 @@ public class UserServiceTest {
         assertThat(userList.get(3).getLevel()).isEqualTo(Level.GOLD);
 
     }
+
     // upgradeLevels 에서 사용할 테스트용 메소드
     private void checkUserAndLevel(User updated, String expectedId, Level expectedLevel) {
         assertThat(updated.getId()).isEqualTo(expectedId);
