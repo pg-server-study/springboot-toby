@@ -1,7 +1,7 @@
 package com.example.springtoby.domain;
 
 import com.example.springtoby.toby.User;
-import com.example.springtoby.toby.UserDao;
+import com.example.springtoby.toby.UserDaoImpl;
 import com.example.springtoby.toby.enums.Level;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UserDAOTest {
 
     @Autowired
-    UserDao userDao;
+    UserDaoImpl userDaoImpl;
 
     User user1;
     User user2;
@@ -46,8 +46,8 @@ public class UserDAOTest {
         user.setRecommend(0);
 
         // when
-        userDao.add(user); // 유저 등록 실행
-        User savedUser = userDao.get(user.getId()); // 유저 조회 실행
+        userDaoImpl.add(user); // 유저 등록 실행
+        User savedUser = userDaoImpl.get(user.getId()); // 유저 조회 실행
 
         // then (저장하고자 했던 유저의 이름과 실제로 DB에 저장된 유저의 이름이 같은지 검증하라)
         assertThat(user.getName()).isEqualTo(savedUser.getName());
@@ -59,35 +59,35 @@ public class UserDAOTest {
     public void addAndGet() throws SQLException {
 
 
-        userDao.add(user1);
-        userDao.add(user2);
+        userDaoImpl.add(user1);
+        userDaoImpl.add(user2);
 
-        User userGet1 = userDao.get(user1.getId());
+        User userGet1 = userDaoImpl.get(user1.getId());
         checkSameUser(userGet1, user1);
 
-        User userGet2 = userDao.get(user2.getId());
+        User userGet2 = userDaoImpl.get(user2.getId());
         checkSameUser(userGet2, user2);
 
     }
 
     @Test
     public void update() throws SQLException {
-        userDao.deleteAll();
+        userDaoImpl.deleteAll();
 
-        userDao.add(user1);
-        userDao.add(user2); // 수정 하지 않을 사용자
+        userDaoImpl.add(user1);
+        userDaoImpl.add(user2); // 수정 하지 않을 사용자
 
         user1.setName("오민규");
         user1.setPassword("springno6");
         user1.setLevel(Level.GOLD);
         user1.setLogin(1000);
         user1.setRecommend(999);
-        userDao.update(user1);
+        userDaoImpl.update(user1);
 
-        User user1Update = userDao.get(user1.getId());
+        User user1Update = userDaoImpl.get(user1.getId());
         checkSameUser(user1, user1Update);
 
-        User user2Update = userDao.get(user2.getId());
+        User user2Update = userDaoImpl.get(user2.getId());
         checkSameUser(user2, user2Update);
 
     }

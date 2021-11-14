@@ -6,7 +6,7 @@ public class Main {
 
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
 
-        UserDao dao = new UserDao();
+        UserDaoImpl dao = new UserDaoImpl();
 
         User user = new User();
         user.setId("whiteship");

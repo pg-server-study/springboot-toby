@@ -1,46 +1,33 @@
-package com.example.springtoby.toby;
+package com.example.springtoby.toby.service;
 
+import com.example.springtoby.toby.User;
+import com.example.springtoby.toby.UserDao;
+import com.example.springtoby.toby.UserDaoImpl;
 import com.example.springtoby.toby.enums.Level;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.List;
 
 @RequiredArgsConstructor
-@Service
-public class UserService {
+@Service("UserServiceImpl")
+public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
-    private final PlatformTransactionManager transactionManager;
-
 
     public static final int MIN_LOG_COUNT_FOR_SILVER = 50;
     public static final int MIN_RECOMMEND_FOR_GOLD = 30;
 
     public void upgradeLevels() {
 
-        TransactionStatus status = this.transactionManager.getTransaction(new DefaultTransactionDefinition());
+        List<User> userList = userDao.getAll();
 
-        try {
-            List<User> userList = userDao.getAll();
+        for(User user : userList) {
 
-            for(User user : userList) {
-
-                if (canUpgradeLevel(user)) {
-                    upgradeLevel(user);
-                }
+            if (canUpgradeLevel(user)) {
+                upgradeLevel(user);
             }
-            this.transactionManager.commit(status);
-        } catch (RuntimeException e) {
-            this.transactionManager.rollback(status);
-            throw e;
         }
-
-
     }
 
     private boolean canUpgradeLevel(User user) {
