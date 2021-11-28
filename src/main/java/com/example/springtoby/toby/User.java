@@ -5,6 +5,7 @@ import com.example.springtoby.toby.enums.Level;
 
 public class User {
 
+
     String id;
     String name;
     String password;

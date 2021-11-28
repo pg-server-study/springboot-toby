@@ -5,17 +5,21 @@ import com.example.springtoby.toby.UserDao;
 import com.example.springtoby.toby.UserDaoImpl;
 import com.example.springtoby.toby.enums.Level;
 import com.example.springtoby.toby.exception.DuplicateUserIdException;
+import com.example.springtoby.toby.service.TransactionHandler;
+import com.example.springtoby.toby.service.TxProxyFactoryBean;
 import com.example.springtoby.toby.service.UserService;
 import com.example.springtoby.toby.service.UserServiceImpl;
-import com.example.springtoby.toby.service.UserServiceTx;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import java.lang.reflect.Proxy;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +33,6 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 public class UserServiceTest {
 
-    @Qualifier("userServiceTx")
     @Autowired
     UserService userService;
 
@@ -38,6 +41,9 @@ public class UserServiceTest {
 
     @Autowired
     PlatformTransactionManager transactionManager;
+
+    @Autowired
+    ApplicationContext context;
 
     List<User> userList;
 
@@ -108,17 +114,32 @@ public class UserServiceTest {
     }
 
     @Test
-    public void upgradeAllOrNothing() throws SQLException {
+    @DirtiesContext
+    public void upgradeAllOrNothing() throws Exception {
         UserServiceImpl testUserServiceImpl = new TestUserServiceImpl(userList.get(3).getId(), userDaoImpl);
 
-        UserServiceTx userServiceTx = new UserServiceTx(testUserServiceImpl, transactionManager);
+//        UserServiceTx userServiceTx = new UserServiceTx(testUserServiceImpl, transactionManager);
+
+        TransactionHandler transactionHandler = new TransactionHandler();
+        transactionHandler.setTarget(testUserServiceImpl);
+        transactionHandler.setTransactionManager(transactionManager);
+        transactionHandler.setPattern("upgradeLevels");
+
+//        UserService txUserService = (UserService) Proxy.newProxyInstance(
+//                getClass().getClassLoader(), new Class[]{ UserService.class }, transactionHandler
+//        );
+
+        TxProxyFactoryBean txProxyFactoryBean = context.getBean("&UserService", TxProxyFactoryBean.class);
+        txProxyFactoryBean.setTarget(testUserServiceImpl);
+
+        UserService txUserService = (UserService) txProxyFactoryBean.getObject();
 
         userDaoImpl.deleteAll();
 
         for (User user : userList) userDaoImpl.add(user);
 
         try {
-            userServiceTx.upgradeLevels();
+            txUserService.upgradeLevels();
             fail("TestUserServiceException expected");
         } catch (TestUserServiceException e) {
 
